@@ -51,13 +51,14 @@ optional arguments:
 
 ## Get started
 
-1. Make sure that the target systems on which you'd like to run `log4shell-detector` has python installed: `python -V` and see if Python 3 is available `python3 -V`
+### NOTE: This is a python2 version!
+1. Make sure that the target systems on which you'd like to run `log4shell-detector` has python installed: `python -V` and see if Python 2 is available `python2 -V`
 
 2. Download this Repo by clicking "Code" > "Download ZIP"
 
 3. Extract the package and bring othe comlete package to the target system (e.g. with scp)
 
-4. Run it with `python3 log4shell-detector.py -p /var/log` (if `python3` isn't available use `python`)
+4. Run it with `python2 log4shell-detector.py -p /var/log` (if `python2` isn't available use `python`)
 
 5. If your applications log to a different folder than `/var/log` find out where the log files reside and scan these folders. Find locations to which apps write logs with `lsof | grep '\.log'`.
 

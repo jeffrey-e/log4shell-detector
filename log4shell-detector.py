@@ -14,7 +14,7 @@ import Log4ShellDetector.Log4ShellDetector as Log4ShellDetector
 
 def evaluate_log_paths():
     paths = []
-    print("[.] Automatically evaluating the folders to which apps write logs ...")
+    print "[.] Automatically evaluating the folders to which apps write logs ..."
     command = "lsof 2>/dev/null | grep '\\.log' | sed 's/.* \\//\\//g' | sort | uniq"
     path_eval = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     output = path_eval.communicate()[0].splitlines()
@@ -26,7 +26,7 @@ def evaluate_log_paths():
             continue
         paths.append(path)
         if args.debug:
-            print("[D] Adding PATH: %s" % path)
+            print "[D] Adding PATH: %s" % path
     return paths
 
 if __name__ == '__main__':
@@ -43,17 +43,17 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    print("     __             ____ ______       ____  ___      __          __          ")
-    print("    / /  ___  ___ _/ / // __/ /  ___ / / / / _ \\___ / /____ ____/ /____  ____")
-    print("   / /__/ _ \\/ _ `/_  _/\\ \\/ _ \\/ -_) / / / // / -_) __/ -_) __/ __/ _ \\/ __/")
-    print("  /____/\\___/\\_, / /_//___/_//_/\\__/_/_/ /____/\\__/\\__/\\__/\\__/\\__/\\___/_/ ")  
-    print("            /___/                                                            ")
-    print(" ")
-    print("  Version %s, %s" % (__version__, __author__))
+    print "     __             ____ ______       ____  ___      __          __          "
+    print "    / /  ___  ___ _/ / // __/ /  ___ / / / / _ \\___ / /____ ____/ /____  ____"
+    print "   / /__/ _ \\/ _ `/_  _/\\ \\/ _ \\/ -_) / / / // / -_) __/ -_) __/ __/ _ \\/ __/"
+    print "  /____/\\___/\\_, / /_//___/_//_/\\__/_/_/ /____/\\__/\\__/\\__/\\__/\\__/\\___/_/ "  
+    print "            /___/                                                            "
+    print " "
+    print "  Version %s, %s" % (__version__, __author__)
     
-    print("")
+    print ""
     date_scan_start = datetime.now()
-    print("[.] Starting scan DATE: %s" % date_scan_start)
+    print "[.] Starting scan DATE: %s" % date_scan_start
     
     # Create Log4Shell Detector Object
     l4sd = Log4ShellDetector.detector(maximum_distance=args.d, debug=args.debug, quick=args.quick)
@@ -68,7 +68,7 @@ if __name__ == '__main__':
             for filename in files:
                 file_path = os.path.join(root, filename)
                 if l4sd.debug:
-                    print("[.] Processing %s ..." % file_path)
+                    print "[.] Processing %s ..." % file_path
                 matches_found = l4sd.scan_file(file_path)
                 if len(matches_found) > 0:
                     for m in matches_found:
@@ -77,7 +77,7 @@ if __name__ == '__main__':
         if not summary:
             for match in matches:
                 for line_number in matches[match]:
-                    print('[!] FILE: %s LINE_NUMBER: %s DEOBFUSCATED_STRING: %s LINE: %s' % (match, line_number, matches[match][line_number][1], matches[match][line_number][0]))
+                    print '[!] FILE: %s LINE_NUMBER: %s DEOBFUSCATED_STRING: %s LINE: %s' % (match, line_number, matches[match][line_number][1], matches[match][line_number][0])
         # Result
         number_of_detections = 0
         number_of_files_with_detections = len(matches.keys())
@@ -85,13 +85,13 @@ if __name__ == '__main__':
             number_of_detections += len(matches[file_path].keys())
        
         if number_of_detections > 0:
-            print("[!] %d files with exploitation attempts detected in PATH: %s" % (number_of_files_with_detections, path))
+            print "[!] %d files with exploitation attempts detected in PATH: %s" % (number_of_files_with_detections, path)
             if summary:
                 for match in matches:
                     for line_number in matches[match]:
-                        print('[!] FILE: %s LINE_NUMBER: %d STRING: %s' % (match, line_number, matches[match][line_number][1]))
+                        print '[!] FILE: %s LINE_NUMBER: %d STRING: %s' % (match, line_number, matches[match][line_number][1])
         else:
-            print("[+] No files with exploitation attempts detected in path PATH: %s" % path)
+            print "[+] No files with exploitation attempts detected in path PATH: %s" % path
         return number_of_detections
 
     # Scan file
@@ -99,9 +99,9 @@ if __name__ == '__main__':
         files = args.f 
         for f in files:
             if not os.path.isfile(f):
-                print("[E] File %s doesn't exist" % f)
+                print "[E] File %s doesn't exist" % f
                 continue
-            print("[.] Scanning FILE: %s ..." % f)
+            print "[.] Scanning FILE: %s ..." % f
             matches = defaultdict(lambda: defaultdict())
             matches_found = l4sd.scan_file(f)
             if len(matches_found) > 0:
@@ -124,7 +124,7 @@ if __name__ == '__main__':
             auto_eval_paths = True
         # Parameter evaluation
         if len(paths) == 0 and not auto_eval_paths:
-            print("[W] Warning: You haven't selected a path (-p path) or automatic evaluation of log paths (--auto). Log4Shell-Detector will activate the automatic path evaluation (--auto) for your convenience.")
+            print "[W] Warning: You haven't selected a path (-p path) or automatic evaluation of log paths (--auto). Log4Shell-Detector will activate the automatic path evaluation (--auto) for your convenience."
             auto_eval_paths = True
         # Automatic path evaluation
         if auto_eval_paths:
@@ -133,22 +133,22 @@ if __name__ == '__main__':
         # Now scan these paths
         for path in paths:
             if not os.path.isdir(path):
-                print("[E] Path %s doesn't exist" % path)
+                print "[E] Path %s doesn't exist" % path
                 continue
-            print("[.] Scanning FOLDER: %s ..." % path)
+            print "[.] Scanning FOLDER: %s ..." % path
             detections = scan_path(l4sd,path,args.summary)
             all_detections += detections
 
     # Finish
     if all_detections > 0:
-        print("[!!!] %d exploitation attempts detected in the complete scan" % all_detections)
+        print "[!!!] %d exploitation attempts detected in the complete scan" % all_detections
         
     else:
-        print("[.] No exploitation attempts detected in the scan")
+        print "[.] No exploitation attempts detected in the scan"
     date_scan_end = datetime.now()
-    print("[.] Finished scan DATE: %s" % date_scan_end)
+    print "[.] Finished scan DATE: %s" % date_scan_end
     duration = date_scan_end - date_scan_start
     mins, secs = divmod(duration.total_seconds(), 60)
     hours, mins = divmod(mins, 60)
-    print("[.] Scan took the following time to complete DURATION: %d hours %d minutes %d seconds" % (hours, mins, secs))
+    print "[.] Scan took the following time to complete DURATION: %d hours %d minutes %d seconds" % (hours, mins, secs)
 

@@ -1,7 +1,6 @@
 
 import base64
 import re
-import os
 import copy
 import gzip
 import io
@@ -18,7 +17,7 @@ try:
     import zstandard
     _std_supported = True
 except ImportError:
-    print("[!] No support for zstandard files without 'zstandard' library")
+    print "[!] No support for zstandard files without 'zstandard' library"
 
 
 class detector(object):
@@ -164,11 +163,11 @@ class detector(object):
                             matches_in_file.append(matches_dict)
         except UnicodeDecodeError as e:
             if self.debug:
-                print("[E] Can't process FILE: %s REASON: most likely not an ASCII based log file" % file_path)
-        except PermissionError as e:
-            print("[E] Can't access %s due to a permission problem." % file_path)
+                print "[E] Can't process FILE: %s REASON: most likely not an ASCII based log file" % file_path
+        # except PermissionError as e:
+        #     print "[E] Can't access %s due to a permission problem." % file_path
         except Exception as e:
-            print("[E] Can't process FILE: %s REASON: %s" % (file_path, traceback.print_exc()))
+            print "[E] Can't process FILE: %s REASON: %s" % (file_path, traceback.print_exc())
 
         return matches_in_file
 
