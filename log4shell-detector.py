@@ -40,6 +40,7 @@ if __name__ == '__main__':
     parser.add_argument('--quick', action='store_true', help="Skip log lines that don't contain a 2021 or 2022 time stamp")
     parser.add_argument('--debug', action='store_true', help='Debug output')
     parser.add_argument('--summary', action='store_true', help='Show summary only')
+    parser.add_argument('--ioc', action='store_true', help='Scan files in IOCs.txt')
 
     args = parser.parse_args()
     
@@ -56,7 +57,7 @@ if __name__ == '__main__':
     print "[.] Starting scan DATE: %s" % date_scan_start
     
     # Create Log4Shell Detector Object
-    l4sd = Log4ShellDetector.detector(maximum_distance=args.d, debug=args.debug, quick=args.quick)
+    l4sd = Log4ShellDetector.detector(maximum_distance=args.d, debug=args.debug, quick=args.quick, ioc_scan=args.ioc)
     
     # Counter
     all_detections = 0

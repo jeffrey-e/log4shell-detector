@@ -5,6 +5,8 @@ import copy
 import gzip
 import io
 import traceback
+import os
+import sys
 
 try:
     from urllib.parse import unquote
@@ -21,13 +23,6 @@ except ImportError:
 
 class detector(object):
 
-    # Collect our custom IOCs
-    ioc_path = os.path.dirname(os.path.realpath(__file__)) + "IOCs.txt"
-    with open(ioc_path, "r") as file:
-        IOCs = []
-        for line in file:
-            stripped_line = line.strip()
-            IOCs.append(stripped_line)
     # These strings will be transformed into detection pads
     DETECTION_STRINGS = ['${jndi:ldap:', '${jndi:rmi:', '${jndi:ldaps:', '${jndi:dns:', 
     '${jndi:nis:', '${jndi:nds:', '${jndi:corba:', '${jndi:iiop:']
@@ -42,14 +37,30 @@ class detector(object):
         ],
         "https://github.com/tangxiaofeng7/CVE-2021-44228-Apache-Log4j-Rce/issues/1": [
             'Reference Class Name: foo'
-        ],
-        "Custom IOCs": IOCs
+        ]
     }
 
-    def __init__(self, maximum_distance, debug, quick):
+    def __init__(self, maximum_distance, debug, quick, ioc_scan):
         self.prepare_detections(maximum_distance)
         self.debug = debug
         self.quick = quick
+        self.ioc = ioc_scan
+
+        # Plain Detection
+        # Collect our custom IOCs
+        if self.ioc:
+            print "[.] Enabling IOC search"
+            ioc_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/IOCs.txt"
+            try:
+                with open(ioc_path, "r") as file:
+                    IOCs = []
+                    for line in file:
+                        stripped_line = line.strip()
+                        IOCs.append(stripped_line)
+            except Exception as e:
+                print "[E] Cannot find IOC file(%s), exiting..." % ioc_path
+                sys.exit()
+            self.PLAIN_STRINGS['Custom IOCs'] = IOCs
 
     def decode_line(self, line):
         while "%" in line:
@@ -73,7 +84,6 @@ class detector(object):
             if args.debug:
                 traceback.print_exc()
 
-        # Plain Detection
         for ref, strings in self.PLAIN_STRINGS.items():
             for s in strings:
                 if s in line or s in decoded_line:
