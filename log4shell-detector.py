@@ -40,7 +40,7 @@ if __name__ == '__main__':
     parser.add_argument('--quick', action='store_true', help="Skip log lines that don't contain a 2021 or 2022 time stamp")
     parser.add_argument('--debug', action='store_true', help='Debug output')
     parser.add_argument('--summary', action='store_true', help='Show summary only')
-    parser.add_argument('--ioc', action='store_true', help='Scan files in IOCs.txt')
+    parser.add_argument('--ioc', action='store_true', help='Scan files in IOCs.txt (located in the same folder as this script)')
 
     args = parser.parse_args()
     
