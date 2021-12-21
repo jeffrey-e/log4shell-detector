@@ -5,6 +5,8 @@ import copy
 import gzip
 import io
 import traceback
+import os
+import sys
 
 try:
     from urllib.parse import unquote
@@ -38,10 +40,27 @@ class detector(object):
         ]
     }
 
-    def __init__(self, maximum_distance, debug, quick):
+    def __init__(self, maximum_distance, debug, quick, ioc_scan):
         self.prepare_detections(maximum_distance)
         self.debug = debug
         self.quick = quick
+        self.ioc = ioc_scan
+
+        # Plain Detection
+        # Collect our custom IOCs
+        if self.ioc:
+            print "[.] Enabling IOC search"
+            ioc_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/IOCs.txt"
+            try:
+                with open(ioc_path, "r") as file:
+                    IOCs = []
+                    for line in file:
+                        stripped_line = line.strip()
+                        IOCs.append(stripped_line)
+            except Exception as e:
+                print "[E] Cannot find IOC file(%s), exiting..." % ioc_path
+                sys.exit()
+            self.PLAIN_STRINGS['Custom IOCs'] = IOCs
 
     def decode_line(self, line):
         while "%" in line:
@@ -65,7 +84,6 @@ class detector(object):
             if args.debug:
                 traceback.print_exc()
 
-        # Plain Detection
         for ref, strings in self.PLAIN_STRINGS.items():
             for s in strings:
                 if s in line or s in decoded_line:

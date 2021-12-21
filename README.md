@@ -47,6 +47,7 @@ optional arguments:
   --quick             Skip log lines that don't contain a 2021 or 2022 time stamp
   --debug             Debug output
   --summary           Show summary only
+  --ioc               Scan files in IOCs.txt (located in the same folder as this script)
 ```
 
 ## Get started
@@ -58,7 +59,7 @@ optional arguments:
 
 3. Extract the package and bring othe comlete package to the target system (e.g. with scp)
 
-4. Run it with `python2 log4shell-detector.py -p /var/log` (if `python2` isn't available use `python`)
+4. Run it with `python2 log4shell-detector.py -p /var/log` (if `python2` isn't available use `python`). Use the `--ioc` param when you have a list of iocs you also want to add to the scan. The file `IOCs.txt` should be created in the root folder (next to `log4shell-detector.py`)
 
 5. If your applications log to a different folder than `/var/log` find out where the log files reside and scan these folders. Find locations to which apps write logs with `lsof | grep '\.log'`.
 
