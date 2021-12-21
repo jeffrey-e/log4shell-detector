@@ -21,6 +21,13 @@ except ImportError:
 
 class detector(object):
 
+    # Collect our custom IOCs
+    ioc_path = os.path.dirname(os.path.realpath(__file__)) + "IOCs.txt"
+    with open(ioc_path, "r") as file:
+        IOCs = []
+        for line in file:
+            stripped_line = line.strip()
+            IOCs.append(stripped_line)
     # These strings will be transformed into detection pads
     DETECTION_STRINGS = ['${jndi:ldap:', '${jndi:rmi:', '${jndi:ldaps:', '${jndi:dns:', 
     '${jndi:nis:', '${jndi:nds:', '${jndi:corba:', '${jndi:iiop:']
@@ -35,7 +42,8 @@ class detector(object):
         ],
         "https://github.com/tangxiaofeng7/CVE-2021-44228-Apache-Log4j-Rce/issues/1": [
             'Reference Class Name: foo'
-        ]
+        ],
+        "Custom IOCs": IOCs
     }
 
     def __init__(self, maximum_distance, debug, quick):
