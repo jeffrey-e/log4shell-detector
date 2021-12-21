@@ -10,7 +10,6 @@ try:
     from urllib.parse import unquote
 except ImportError:
     from urllib import unquote
-import traceback
 
 _std_supported = False
 try:
@@ -106,7 +105,7 @@ class detector(object):
         try:
             # Gzipped logs
             if "log" in file_path and file_path.endswith(".gz"):
-                with gzip.open(file_path, 'rt') as gzlog:
+                with gzip.open(file_path, 'r') as gzlog:
                     c = 0
                     for line in gzlog: 
                         c += 1
@@ -167,7 +166,7 @@ class detector(object):
         # except PermissionError as e:
         #     print "[E] Can't access %s due to a permission problem." % file_path
         except Exception as e:
-            print "[E] Can't process FILE: %s REASON: %s" % (file_path, traceback.print_exc())
+            print "[E] Can't process FILE: %s REASON: %s, DETAILS:%s" % (file_path, traceback.print_exc(), e)
 
         return matches_in_file
 
